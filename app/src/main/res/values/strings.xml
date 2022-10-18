@@ -16,9 +16,10 @@
     <string name="buttonMulti">x</string>
     <string name="buttonDivi">/</string>
     <string name="buttonIgual">=</string>
-    <string name="buttonMod">%</string>
-    <string name="buttonCamb">#</string>
+    <string name="buttonMod">√</string>
+    <string name="buttonCamb">+/-</string>
     <string name="buttonPunto">.</string>
+    <string name="buttonAC">AC</string>
 
 
 
