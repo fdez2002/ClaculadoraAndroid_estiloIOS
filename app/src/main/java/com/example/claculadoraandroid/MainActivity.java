@@ -202,6 +202,10 @@ public class MainActivity extends AppCompatActivity{
         valor1 = Double.parseDouble(operaciones.getText().toString());
         res += valor1;
     }
+    public void restar(){
+        valor1 = Double.parseDouble(operaciones.getText().toString());
+        res -= valor1;
+    }
 
 
 }
