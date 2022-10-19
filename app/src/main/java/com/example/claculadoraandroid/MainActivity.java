@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity{
                     resetboton, cambioSignoboton, raizboton,
                         igualboton, comaboton;
     private double valor1, valor2, res=0;
+    private String operador;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -125,12 +126,15 @@ public class MainActivity extends AppCompatActivity{
                 operaciones.setText(operaciones.getText()+"9");
             }
         });
-        //Operadores
+        /**
+         * Operaciones
+         */
         sumarboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                sumar();
+                operador = "+";
+                operaciones(operador);
                 operaciones.setText("");
                 //operaciones.setText(operaciones.getText()+"+");
             }
@@ -139,6 +143,16 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 eliminarCero();
+                operador = "-";
+                valor1 = Double.parseDouble(operaciones.getText().toString());
+                if(res == 0) {
+
+                    res = valor1;
+                }
+
+                operaciones(operador);
+                operaciones.setText("");
+
                 //operaciones.setText(operaciones.getText()+"-");
             }
         });
@@ -146,6 +160,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 eliminarCero();
+                operador = "*";
                 //operaciones.setText(operaciones.getText()+"x");
             }
         });
@@ -153,6 +168,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 eliminarCero();
+                operador = "/";
                 //operaciones.setText(operaciones.getText()+"/");
             }
         });
@@ -172,14 +188,18 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operaciones.setText("0");
+                valor2 =0;
+                valor1 = 0;
+                res = 0;
             }
         });
         igualboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eliminarCero();
                 valor2 = Double.parseDouble(operaciones.getText().toString());
-                res += valor2;
+                eliminarCero();
+
+                operaciones(operador);
                 //operaciones.setText("=");
                 operaciones.setText(String.valueOf(res));
 
@@ -198,13 +218,27 @@ public class MainActivity extends AppCompatActivity{
             operaciones.setText("");
         }
     }
-    public void sumar(){
+
+    public void operaciones(String operador){
+
         valor1 = Double.parseDouble(operaciones.getText().toString());
-        res += valor1;
-    }
-    public void restar(){
-        valor1 = Double.parseDouble(operaciones.getText().toString());
-        res -= valor1;
+        switch (operador){
+            case "+":
+                res+=valor1;
+                break;
+            case "-":
+                res-=valor1;
+                break;
+            case "*":
+                res*=valor1;
+                break;
+            case "/":
+                res/=valor1;
+                break;
+
+
+        }
+        operaciones.setText(String.valueOf(res));
     }
 
 
