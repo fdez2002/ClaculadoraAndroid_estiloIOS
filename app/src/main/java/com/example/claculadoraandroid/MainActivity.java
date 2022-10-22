@@ -10,15 +10,21 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
-public class MainActivity extends AppCompatActivity{
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
     private TextView operaciones;
+
     private Button ceroBoton, unoboton, dosboton, tresboton,
             cuatroboton, cincoboton, seisboton, sieteboton, ochoboton, nueveboton,
-                sumarboton, restarboton, multiboton, diviboton,
-                    resetboton, cambioSignoboton, raizboton,
-                        igualboton, comaboton;
-    private double valor1, valor2, res=0;
-    private String operador;
+            sumarboton, restarboton, multiboton, diviboton,
+            resetboton, cambioSignoboton, raizboton,
+            igualboton, comaboton;
+
+    private double res = 0, resMulDivi = 1;
+    private String operador, operadorViejo;
+    private ArrayList<Double> numeros = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -51,79 +57,83 @@ public class MainActivity extends AppCompatActivity{
         igualboton = findViewById(R.id.button_igual);
         comaboton = findViewById(R.id.button_coma);
 
-        //Numeros
+        //Numeros, capturamos el boton pulsado y le añadimos el contenido a la pantalla
         ceroBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(operaciones.getText().equals("0")){
+                if (operaciones.getText().equals("0")) {
 
-                }else{
-                    operaciones.setText(operaciones.getText()+"0");
+                } else {
+                    operaciones.setText(operaciones.getText() + "0");
 
                 }
             }
         });
+
         unoboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"1");
+
+                operaciones.setText(operaciones.getText() + "1");
+
             }
         });
         dosboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"2");
+
+                operaciones.setText(operaciones.getText() + "2");
             }
         });
         tresboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"3");
+                operaciones.setText(operaciones.getText() + "3");
             }
         });
         cuatroboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"4");
+                operaciones.setText(operaciones.getText() + "4");
             }
         });
         cincoboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"5");
+                operaciones.setText(operaciones.getText() + "5");
             }
         });
         seisboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"6");
+                operaciones.setText(operaciones.getText() + "6");
             }
         });
         sieteboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"7");
+                operaciones.setText(operaciones.getText() + "7");
             }
         });
         ochoboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"8");
+                operaciones.setText(operaciones.getText() + "8");
             }
         });
         nueveboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText()+"9");
+                operaciones.setText(operaciones.getText() + "9");
             }
         });
         /**
@@ -134,9 +144,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operador = "+";
-                operaciones(operador);
+                agregarOperador(operador);
                 operaciones.setText("");
-                //operaciones.setText(operaciones.getText()+"+");
             }
         });
         restarboton.setOnClickListener(new View.OnClickListener() {
@@ -144,16 +153,10 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operador = "-";
-                valor1 = Double.parseDouble(operaciones.getText().toString());
-                if(res == 0) {
-
-                    res = valor1;
-                }
-
-                operaciones(operador);
+                agregarOperador(operador);
                 operaciones.setText("");
 
-                //operaciones.setText(operaciones.getText()+"-");
+
             }
         });
         multiboton.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +164,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operador = "*";
-                //operaciones.setText(operaciones.getText()+"x");
+                agregarOperador(operador);
+                operaciones.setText("");
             }
         });
         diviboton.setOnClickListener(new View.OnClickListener() {
@@ -169,18 +173,26 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operador = "/";
-                //operaciones.setText(operaciones.getText()+"/");
+                agregarOperador(operador);
+                operaciones.setText("");
             }
         });
         cambioSignoboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                eliminarCero();
+                operador = "+/-";
+                agregarOperador(operador);
+                igual();
             }
         });
         raizboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                eliminarCero();
+                operador = "√";
+                agregarOperador(operador);
+                igual();
             }
         });
         resetboton.setOnClickListener(new View.OnClickListener() {
@@ -188,20 +200,15 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 eliminarCero();
                 operaciones.setText("0");
-                valor2 =0;
-                valor1 = 0;
+                numeros.clear();
                 res = 0;
+                resMulDivi = 1;
             }
         });
         igualboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                valor2 = Double.parseDouble(operaciones.getText().toString());
-                eliminarCero();
-
-                operaciones(operador);
-                //operaciones.setText("=");
-                operaciones.setText(String.valueOf(res));
+                igual();
 
             }
         });
@@ -209,36 +216,116 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(".");
+                operaciones.setText(operaciones.getText() + ".");
             }
         });
     }
-    public void eliminarCero(){
-        if(operaciones.getText().equals("0")) {
+
+    //Nos dara el resultado de la operacion e inicializara res a 0 y limpiara el array
+    public void igual() {
+        eliminarCero();
+        alamacenajeValores(Double.parseDouble(operaciones.getText().toString()));
+        operaciones(operador);
+        operaciones.setText(String.valueOf(res));
+        res = 0;
+        numeros.clear();
+
+    }
+
+    public void alamacenajeValores(double num) {
+        numeros.add(num);//alamcenamos los numeros
+    }
+
+    public void agregarOperador(String operador) {
+
+
+        alamacenajeValores(Double.parseDouble(operaciones.getText().toString()));//almacenamos el contenido del textview en el array
+        //Comprobamos si el operador es distinto, si es asi hara la operacion
+        if ((operadorViejo != operador) && (operadorViejo != null)) {
+            operaciones(operadorViejo);
+            numeros.clear();
+        }
+
+        operadorViejo = operador;//guardamos el operador pulsado en la variable
+
+
+    }
+
+
+    public void eliminarCero() {
+        if (operaciones.getText().equals("0")) {
             operaciones.setText("");
         }
     }
 
-    public void operaciones(String operador){
+    public void operaciones(String operador) {
 
-        valor1 = Double.parseDouble(operaciones.getText().toString());
-        switch (operador){
+        //Dependiendo del operador seleccionado hara una operacion u otra
+        switch (operador) {
             case "+":
-                res+=valor1;
+                for (Double valores : numeros) {
+                    res += valores;
+                }
                 break;
             case "-":
-                res-=valor1;
+                //En la resta debemos comprobar si resultado es igual a 0 ya que de la otra forma nos saldria un resultado negativo
+                //empezando a operar por la resta
+                if (res == 0) {
+                    res = numeros.get(0);
+                    for (int i = 1; i < numeros.size(); i++) {
+
+                        res -= numeros.get(i);
+                    }
+                } else {
+                    for (Double valores : numeros) {
+                        res -= valores;
+                    }
+                }
                 break;
             case "*":
-                res*=valor1;
+                if (res == 0) {
+                    for (Double valores : numeros) {
+                        resMulDivi *= valores;
+                    }
+                    res = resMulDivi;
+                    resMulDivi = 1;
+                } else {
+                    for (Double valores : numeros) {
+                        res *= valores;
+                    }
+                }
                 break;
             case "/":
-                res/=valor1;
+                //En la division tenemos que comprobar si el resultado esta vacio (resultado = 0),
+                //si es asi el primer valor del array lo guardaremos y empezaremos a realizar la division.
+                //Si no es igual a 0 haremos la division con el contenido del resultado
+                //Si se divide entre 0 se activara un parpadeo con un mensaje de error.
+
+                if (res == 0) {
+                    res = numeros.get(0);
+
+                    for (int i = 1; i < numeros.size(); i++) {
+
+                        res /= numeros.get(i);
+                    }
+                    resMulDivi = 1;
+                } else {
+                    for (Double valores : numeros) {
+                        res /= valores;
+                    }
+                }
+                break;
+            case "√":
+                res = Math.sqrt(numeros.get(0));//Con este metodo nos ayuda a realizar directamente la operacion de raiz
+                break;
+            case "+/-":
+                res = numeros.get(0) * -1;//cambiamos el numero a negativo
                 break;
 
 
         }
-        operaciones.setText(String.valueOf(res));
+
+
     }
 
 
