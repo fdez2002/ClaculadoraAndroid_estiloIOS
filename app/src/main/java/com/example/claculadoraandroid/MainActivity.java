@@ -14,6 +14,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    //Componentes de la activity
     private TextView operaciones;
 
     private Button ceroBoton, unoboton, dosboton, tresboton,
@@ -22,16 +24,17 @@ public class MainActivity extends AppCompatActivity {
             resetboton, cambioSignoboton, raizboton,
             igualboton, comaboton;
 
-    private double res = 0, resMulDivi = 1;
-    private String operador, operadorViejo;
-    private ArrayList<Double> numeros = new ArrayList<>();
+    //Variables
+    private double res = 0, resMulDivi = 1;//almacenamos los resultados
+    private String operador, operadorViejo;//almacenamos los operadores pulsados
+    private ArrayList<Double> numeros = new ArrayList<>();//almacenamos los distintos numeros que se pulsen
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Asignamos los componentes con creados con los del activity
         operaciones = findViewById(R.id.textViewOperaciones);
 
         ceroBoton = findViewById(R.id.button0);
@@ -57,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         igualboton = findViewById(R.id.button_igual);
         comaboton = findViewById(R.id.button_coma);
 
-        //Numeros, capturamos el boton pulsado y le añadimos el contenido a la pantalla
+        //Numeros
+        // Capturamos el boton pulsado y le añadimos el contenido a la pantalla
         ceroBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
         sumarboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eliminarCero();
-                operador = "+";
-                agregarOperador(operador);
-                operaciones.setText("");
+                eliminarCero();//llamamos al metodo eliminarCero()
+                operador = "+";//le asignamos un + al aoperador
+                agregarOperador(operador);//llamamos al metodo agregarOperador() con la informacion del operador
+                operaciones.setText("");//liimpiamos el textview
             }
         });
         restarboton.setOnClickListener(new View.OnClickListener() {
@@ -199,10 +203,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText("0");
-                numeros.clear();
-                res = 0;
-                resMulDivi = 1;
+                operaciones.setText("0");//mostramos en el textview un 0
+                numeros.clear();//limpiamos el array de numeros
+                res = 0;//limpiamos res
+                resMulDivi = 1;//limpiamos resMulDivi
             }
         });
         igualboton.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 eliminarCero();
-                operaciones.setText(operaciones.getText() + ".");
+                operaciones.setText(operaciones.getText() + ".");//añadimos un . para trabajar con decimales
             }
         });
     }
@@ -224,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
     //Nos dara el resultado de la operacion e inicializara res a 0 y limpiara el array
     public void igual() {
         eliminarCero();
-        alamacenajeValores(Double.parseDouble(operaciones.getText().toString()));
+        alamacenajeValores(Double.parseDouble(operaciones.getText().toString()));//captamos el contenido del textview y lo añadimos al array
         operaciones(operador);
-        operaciones.setText(String.valueOf(res));
+        operaciones.setText(String.valueOf(res));//mostramos el resultado
         res = 0;
         numeros.clear();
 
